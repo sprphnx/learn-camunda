@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1bfyqf9" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.3.0">
+  <bpmn:process id="HttpConnectorTestProcess" name="Http Connector Test" isExecutable="true">
+    <bpmn:startEvent id="ProcessStartedWithUserIdStartEvent" name="Process started with userId">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="userId" label="User Id" type="string" defaultValue="1" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1nqfwsv</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1nqfwsv" sourceRef="ProcessStartedWithUserIdStartEvent" targetRef="CallRESTViaConnectorTask" />
+    <bpmn:serviceTask id="CallRESTViaConnectorTask" name="Call REST via connector">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">GET</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Accept">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="url">https://reqres.in/api/users/1</camunda:inputParameter>
+            <camunda:outputParameter name="email">${S(response).prop("data").prop("email")}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1nqfwsv</bpmn:incoming>
+      <bpmn:outgoing>Flow_1xaqis8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1xaqis8" sourceRef="CallRESTViaConnectorTask" targetRef="Activity_1xg58mq" />
+    <bpmn:userTask id="Activity_18grwb4" name="Test">
+      <bpmn:incoming>Flow_1o14199</bpmn:incoming>
+      <bpmn:outgoing>Flow_11v43v2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Activity_1xg58mq" name="Call REST via connector">
+      <bpmn:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">GET</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Accept">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="url">https://reqres.in/api/users/2</camunda:inputParameter>
+            <camunda:outputParameter name="response-received">${S(response)}</camunda:outputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1xaqis8</bpmn:incoming>
+      <bpmn:outgoing>Flow_1o14199</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1o14199" sourceRef="Activity_1xg58mq" targetRef="Activity_18grwb4" />
+    <bpmn:endEvent id="Event_14dvw2f">
+      <bpmn:incoming>Flow_11v43v2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_11v43v2" sourceRef="Activity_18grwb4" targetRef="Event_14dvw2f" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="HttpConnectorTestProcess">
+      <bpmndi:BPMNEdge id="Flow_11v43v2_di" bpmnElement="Flow_11v43v2">
+        <di:waypoint x="770" y="80" />
+        <di:waypoint x="852" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1o14199_di" bpmnElement="Flow_1o14199">
+        <di:waypoint x="570" y="80" />
+        <di:waypoint x="670" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xaqis8_di" bpmnElement="Flow_1xaqis8">
+        <di:waypoint x="410" y="80" />
+        <di:waypoint x="470" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nqfwsv_di" bpmnElement="Flow_1nqfwsv">
+        <di:waypoint x="188" y="80" />
+        <di:waypoint x="310" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_0qlchhx_di" bpmnElement="CallRESTViaConnectorTask">
+        <dc:Bounds x="310" y="40" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1dzdas1_di" bpmnElement="Activity_18grwb4">
+        <dc:Bounds x="670" y="40" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xg58mq_di" bpmnElement="Activity_1xg58mq">
+        <dc:Bounds x="470" y="40" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14dvw2f_di" bpmnElement="Event_14dvw2f">
+        <dc:Bounds x="852" y="62" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="ProcessStartedWithUserIdStartEvent">
+        <dc:Bounds x="152" y="62" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="132" y="105" width="77" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
